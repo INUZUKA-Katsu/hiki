@@ -279,9 +279,9 @@ end
 
 if @request.params["conf"] == "theme"
   @conf_theme_list = []
-  Dir.glob("#{@conf.theme_path}/*".untaint).sort.each do |dir|
+  Dir.glob("#{@conf.theme_path}/*").sort.each do |dir|
     theme = File.basename(dir)
-    next unless FileTest.file?("#{dir}/#{theme}.css".untaint)
+    next unless FileTest.file?("#{dir}/#{theme}.css")
     name = theme.split(/_/).collect{|s| s.capitalize}.join(" ")
     @conf_theme_list << [theme,name]
   end

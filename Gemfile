@@ -6,10 +6,12 @@ gem "docdiff"
 gem "hikidoc"
 gem "rdtool"
 gem "xmlrpc"
+gem "sequel"
 
 group :development do
   gem "pry"
   gem "foreman"
+  gem "webrick"
 end
 
 group :development, :test do

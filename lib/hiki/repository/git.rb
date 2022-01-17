@@ -8,15 +8,15 @@ module Hiki
       Repository.register(:git, self)
 
       def commit(page, msg = default_msg)
-        escaped_page = escape(page).untaint
+        escaped_page = escape(page)
         Dir.chdir(@text_dir) do
-          system("git add -- #{escaped_page}".untaint)
-          system("git commit -q -m \"#{msg.untaint}\" -- #{escaped_page}")
+          system("git add -- #{escaped_page}")
+          system("git commit -q -m \"#{msg}\" -- #{escaped_page}")
         end
       end
 
       def commit_with_content(page, content, message = default_msg)
-        escaped_page = escape(page).untaint
+        escaped_page = escape(page)
         File.open(File.join(@text_dir, escaped_page), "w+") do |file|
           file.write(content)
         end
@@ -24,16 +24,16 @@ module Hiki
       end
 
       def delete(page, msg = default_msg)
-        escaped_page = escape(page).untaint
+        escaped_page = escape(page)
         Dir.chdir(@text_dir) do
           system("git rm -q -- #{escaped_page}")
-          system("git commit -q -m \"#{msg.untaint}\" #{escaped_page}")
+          system("git commit -q -m \"#{msg}\" #{escaped_page}")
         end
       end
 
       def rename(old_page, new_page)
-        old_page = escape(old_page.untaint)
-        new_page = escape(new_page.untaint)
+        old_page = escape(old_page)
+        new_page = escape(new_page)
         Dir.chdir(@text_dir) do
           raise ArgumentError, "#{new_page} has already existed." if File.exist?(new_page)
           system("git", "mv", old_page, new_page)
@@ -44,7 +44,7 @@ module Hiki
       def get_revision(page, revision)
         ret = ""
         Dir.chdir(@text_dir) do
-          open("|git cat-file blob #{revision}".untaint) do |f|
+          open("|git cat-file blob #{revision}") do |f|
             ret = f.read
           end
         end
@@ -56,7 +56,7 @@ module Hiki
         all_log = ""
         revs = []
         Dir.chdir(@text_dir) do
-          open("|git log --raw -- #{escape(page).untaint}") do |f|
+          open("|git log --raw -- #{escape(page)}") do |f|
             all_log = f.read
           end
         end

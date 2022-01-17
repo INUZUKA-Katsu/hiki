@@ -82,7 +82,7 @@ module Hiki
         cache_path = "#{@conf.cache_path}/parser"
         Dir.mkdir(cache_path) unless test(?e, cache_path)
         begin
-          release_date, tokens = Marshal.load(File.binread("#{cache_path}/#{escape(page)}".untaint))
+          release_date, tokens = Marshal.load(File.binread("#{cache_path}/#{escape(page)}"))
           if release_date == Hiki::RELEASE_DATE
             return tokens
           else
@@ -95,7 +95,7 @@ module Hiki
 
       def save_cache(page, tokens)
         begin
-          File.open("#{@conf.cache_path}/parser/#{escape(page)}".untaint, "wb") do |f|
+          File.open("#{@conf.cache_path}/parser/#{escape(page)}", "wb") do |f|
             Marshal.dump([Hiki::RELEASE_DATE, tokens], f)
           end
         rescue
@@ -104,7 +104,7 @@ module Hiki
 
       def delete_cache(page)
         begin
-          File.unlink("#{@conf.cache_path}/parser/#{escape(page)}".untaint)
+          File.unlink("#{@conf.cache_path}/parser/#{escape(page)}")
         rescue Errno::ENOENT
         end
       end

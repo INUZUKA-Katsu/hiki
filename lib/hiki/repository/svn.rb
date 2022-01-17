@@ -23,7 +23,7 @@ module Hiki
       end
 
       def commit(page, msg = default_msg)
-        escaped_page = escape(page).untaint
+        escaped_page = escape(page)
         Dir.chdir(@text_dir) do
           found = system("svn status -q -- #{escaped_page} | grep -q #{escaped_page}")
           system("svn add -q -- #{escaped_page}") unless found
@@ -33,7 +33,7 @@ module Hiki
       end
 
       def commit_with_content(page, content, msg = default_msg)
-        escaped_page = escape(page).untaint
+        escaped_page = escape(page)
         File.open(File.join(@text_dir, escaped_page), "w+") do |file|
           file.write(content)
         end
@@ -41,16 +41,16 @@ module Hiki
       end
 
       def delete(page, msg = default_msg)
-        escaped_page = escape(page).untaint
+        escaped_page = escape(page)
         Dir.chdir(@text_dir) do
           system("svn remove -q -- #{escaped_page}")
-          system("svn ci -q --force-log -m \"#{msg}\"".untaint)
+          system("svn ci -q --force-log -m \"#{msg}\"")
         end
       end
 
       def rename(old_page, new_page)
-        old_page = escape(old_page.untaint)
-        new_page = escape(new_page.untaint)
+        old_page = escape(old_page)
+        new_page = escape(new_page)
         Dir.chdir(@text_dir) do
           raise ArgumentError, "#{new_page} has already existed." if File.exist?(new_page)
           system("svn", "mv", "-q", old_page, new_page)
@@ -60,7 +60,7 @@ module Hiki
 
       def get_revision(page, revision)
         ret = ""
-        escaped_page = escape(page).untaint
+        escaped_page = escape(page)
         Dir.chdir(@text_dir) do
           open("|svn cat -r #{revision.to_i} #{escaped_page}") do |f|
             ret = f.read
@@ -71,7 +71,7 @@ module Hiki
 
       def revisions(page)
         require "time"
-        escaped_page = escape(page).untaint
+        escaped_page = escape(page)
         log = ""
         revs = []
         Dir.chdir(@text_dir) do

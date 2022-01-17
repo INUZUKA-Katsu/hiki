@@ -200,9 +200,8 @@ module Hiki
       if @conf.mail && !@conf.mail.empty? && @conf.smtp_server
         Net::SMTP.start(@conf.smtp_server, 25) do |smtp|
           from_addr = @conf.mail_from ? @conf.mail_from : @conf.mail[0]
-          from_addr.untaint
           to_addrs = @conf.mail
-          to_addrs.each{|a| a.untaint}
+          to_addrs.each{|a| a}
 
           smtp.send_mail <<EndOfMail, from_addr, *to_addrs
 From: #{from_addr}

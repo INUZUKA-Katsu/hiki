@@ -13,15 +13,15 @@ module Hiki
 
       def commit(page, msg = default_msg)
         Dir.chdir("#{@data_path}/text") do
-          system("cvs -d #{@root} add -- #{escape(page)} > /dev/null 2>&1".untaint)
-          system("cvs -d #{@root} ci -m '#{msg}' > /dev/null 2>&1".untaint)
+          system("cvs -d #{@root} add -- #{escape(page)} > /dev/null 2>&1")
+          system("cvs -d #{@root} ci -m '#{msg}' > /dev/null 2>&1")
         end
       end
 
       def delete(page, msg = default_msg)
         Dir.chdir("#{@data_path}/text") do
-          system("cvs -d #{@root} remove -- #{escape(page)} > /dev/null 2>&1".untaint)
-          system("cvs -d #{@root} ci -m '#{msg}' > /dev/null 2>&1".untaint)
+          system("cvs -d #{@root} remove -- #{escape(page)} > /dev/null 2>&1")
+          system("cvs -d #{@root} ci -m '#{msg}' > /dev/null 2>&1")
         end
       end
 
@@ -32,7 +32,7 @@ module Hiki
       def get_revision(page, revision)
         ret = ""
         Dir.chdir("#{@data_path}/text") do
-          open("|cvs -Q up -p -r 1.#{revision.to_i} #{escape(page).untaint}") do |f|
+          open("|cvs -Q up -p -r 1.#{revision.to_i} #{escape(page)}") do |f|
             ret = f.read
           end
         end
@@ -44,7 +44,7 @@ module Hiki
         log = ""
         revs = []
         Dir.chdir("#{@data_path}/text") do
-          open("|cvs -Q log #{escape(page).untaint}") do |f|
+          open("|cvs -Q log #{escape(page)}") do |f|
             log = f.read
           end
         end

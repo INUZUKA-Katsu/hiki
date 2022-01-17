@@ -12,7 +12,7 @@ module Hiki
       Repository.register(:hg, self)
 
       def commit(page, msg = default_msg)
-        escaped_page = escape(page).untaint
+        escaped_page = escape(page)
         Dir.chdir(@text_dir) do
           system("hg addremove -q #{escaped_page}")
           system("hg ci -m \"#{msg}\" #{escaped_page}")
@@ -20,7 +20,7 @@ module Hiki
       end
 
       def commit_with_content(page, content, msg = default_msg)
-        escaped_page = escape(page).untaint
+        escaped_page = escape(page)
         File.open(File.join(@text_dir, escaped_page), "w+") do |file|
           file.write(content)
         end
@@ -28,7 +28,7 @@ module Hiki
       end
 
       def delete(page, msg = default_msg)
-        escaped_page = escape(page).untaint
+        escaped_page = escape(page)
         Dir.chdir(@text_dir) do
           system("hg rm #{escaped_page}")
           system("hg ci -m \"#{msg}\" #{escaped_page}")
@@ -36,8 +36,8 @@ module Hiki
       end
 
       def rename(old_page, new_page)
-        old_page = escape(old_page.untaint)
-        new_page = escape(new_page.untaint)
+        old_page = escape(old_page)
+        new_page = escape(new_page)
         Dir.chdir(@text_dir) do
           raise ArgumentError, "#{new_page} has already existed." if File.exist?(new_page)
           system("hg", "mv", "-q", old_page, new_page)
@@ -47,9 +47,9 @@ module Hiki
 
       def get_revision(page, revision)
         r = ""
-        escaped_page = escape(page).untaint
+        escaped_page = escape(page)
         Dir.chdir(@text_dir) do
-          open("|hg cat -r #{revision.to_i-1} #{escaped_page}".untaint) do |f|
+          open("|hg cat -r #{revision.to_i-1} #{escaped_page}") do |f|
             r = f.read
           end
         end
@@ -58,7 +58,7 @@ module Hiki
 
       def revisions(page)
         require "time"
-        escaped_page = escape(page).untaint
+        escaped_page = escape(page)
         all_log = ""
         revs = []
         original_lang = ENV["LANG"]

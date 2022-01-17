@@ -73,7 +73,7 @@ module Hiki
     end
 
     def save_config
-      conf = ERB.new(File.open("#{@template_path}/hiki.conf"){|f| f.read }.untaint).result(binding)
+      conf = ERB.new(File.open("#{@template_path}/hiki.conf"){|f| f.read }).result(binding)
       File.open(@config_file, "w") do |f|
         f.print conf
       end
@@ -109,7 +109,7 @@ module Hiki
         template = File.join(@template_path, @template[cmd])
       end
       if FileTest.file?(template)
-        File.read(template).untaint
+        File.read(template)
       else
         raise Errno::ENOENT, "Template file for \"#{cmd}\" not found."
       end
@@ -129,7 +129,7 @@ module Hiki
     # loading hikiconf.rb in current directory
     def load(config_path = "hikiconf.rb")
       @options = {}
-      eval(File.open(config_path){|f| f.read }.untaint, binding, "(#{config_path})", 1)
+      eval(File.open(config_path){|f| f.read }, binding, "(#{config_path})", 1)
       format_error if $data_path
 
       raise "No @data_path variable." unless @data_path
@@ -212,7 +212,7 @@ module Hiki
                    :mail_on_update, :use_sidebar, :auto_link, :use_wikiname,
                    :xmlrpc_enabled, :options2]
       begin
-        cgi_conf = File.open(@config_file){|f| f.read }.untaint
+        cgi_conf = File.open(@config_file){|f| f.read }
         cgi_conf.gsub!(/^[@$]/, "")
         def_vars1 = ""
         def_vars2 = ""
@@ -220,7 +220,7 @@ module Hiki
           def_vars1 << "#{var} = nil\n"
           def_vars2 << "@#{var} = #{var} unless #{var} == nil\n"
         end
-        b = binding.taint
+        b = binding
         eval(def_vars1, b)
         Thread.start {
           begin
@@ -237,7 +237,7 @@ module Hiki
       if @options2 then
         @options.update(@options2)
       else
-        @options2 = {}.taint
+        @options2 = {}
       end
       format_error if $site_name
     end
@@ -270,7 +270,7 @@ module Hiki
             quality = 1.0
           end
           [lang, quality]
-        }.sort_by{|i| -i[1]}.map{|i| i[0][0...2].untaint}
+        }.sort_by{|i| -i[1]}.map{|i| i[0][0...2]}
 
         candidates.concat(accept_language)
       end

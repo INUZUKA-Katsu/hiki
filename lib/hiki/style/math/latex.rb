@@ -12,7 +12,7 @@ module Hiki
       @cache_path = "#{@conf.cache_path}/math_latex"
       @image_path = "#{@cache_path}/#{escape(@page)}"
       begin
-        Dir.mkdir(@cache_path) unless test(?e, @cache_path.untaint)
+        Dir.mkdir(@cache_path) unless test(?e, @cache_path)
       rescue Exception
       end
 
@@ -31,7 +31,7 @@ module Hiki
 
     def prepare_directory
       begin
-        Dir.mkdir(@image_path) unless test(?e, @image_path.untaint)
+        Dir.mkdir(@image_path) unless test(?e, @image_path)
       rescue Exception
       end
     end
@@ -39,7 +39,7 @@ module Hiki
     def typeset(text)
       self.prepare_directory()
 
-      filename = md5(text.untaint)
+      filename = md5(text)
       if !File.exist?("#{@image_path}/#{filename}.png") then
         File.open("#{@image_path}/#{filename}.tex", "w") do |f|
           f.puts('\documentclass[' + @ptsize + "pt]{" + @documentclass + "}")

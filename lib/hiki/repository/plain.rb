@@ -11,23 +11,23 @@ module Hiki
       def commit(page, log = nil)
         wiki = File.read("#{@data_path}/text/.wiki")
 
-        dir = "#{@root}/#{wiki.untaint}/#{escape(page).untaint}"
+        dir = "#{@root}/#{wiki}/#{escape(page)}"
 
         Dir.mkdir(dir) if not File.exist?(dir)
         FileUtils.rm("#{dir}/.removed", {force: true})
 
         rev = last_revision(page) + 1
 
-        FileUtils.cp("#{@data_path}/text/#{escape(page).untaint}", "#{dir}/#{rev}")
+        FileUtils.cp("#{@data_path}/text/#{escape(page)}", "#{dir}/#{rev}")
       end
 
       # This is a utility method for command line tools
       def commit_with_content(page, content, log = nil)
         escaped_page = escape(page)
         wiki = File.read(File.join(@data_path, "text", ".wiki"))
-        dir = File.join(@root, wiki, escaped_page).untaint
+        dir = File.join(@root, wiki, escaped_page)
         revision = last_revision(page) + 1
-        page_path = File.join(@data_path, "text", escaped_page).untaint
+        page_path = File.join(@data_path, "text", escaped_page)
         FileUtils.mkdir_p(dir)
         FileUtils.rm_f(File.join(dir, ".removed"))
 
@@ -39,27 +39,27 @@ module Hiki
 
       def delete(page, log = nil)
         wiki = File.read("#{@data_path}/text/.wiki")
-        File.open("#{@root}/#{wiki.untaint}/#{escape(page).untaint}/.removed", "w"){|f|}
+        File.open("#{@root}/#{wiki}/#{escape(page)}/.removed", "w"){|f|}
       end
 
       def rename(old_page, new_page)
         wiki = File.read("#{@data_path}/text/.wiki")
-        old_dir = "#{@root}/#{wiki.untaint}/#{escape(old_page).untaint}"
-        new_dir = "#{@root}/#{wiki.untaint}/#{escape(new_page).untaint}"
+        old_dir = "#{@root}/#{wiki}/#{escape(old_page)}"
+        new_dir = "#{@root}/#{wiki}/#{escape(new_page)}"
         raise ArgumentError, "#{new_page} has already existed." if File.exist?(new_dir)
         FileUtils.mv(old_dir, new_dir)
       end
 
       def get_revision(page, revision)
         wiki = File.read("#{@data_path}/text/.wiki")
-        File.read("#{@root}/#{wiki.untaint}/#{escape(page).untaint}/#{revision.to_i}")
+        File.read("#{@root}/#{wiki}/#{escape(page)}/#{revision.to_i}")
       end
 
       def revisions(page)
         wiki = File.read("#{@data_path}/text/.wiki")
         revs = []
-        Dir.glob("#{@root}/#{wiki.untaint}/#{escape(page).untaint}/*").each do |file|
-          revs << [File.basename(file).to_i, File.mtime(file.untaint).localtime.to_s, "", ""]
+        Dir.glob("#{@root}/#{wiki}/#{escape(page)}/*").each do |file|
+          revs << [File.basename(file).to_i, File.mtime(file).localtime.to_s, "", ""]
         end
         revs.sort_by{|e| -e[0]}
       end
@@ -69,7 +69,7 @@ module Hiki
 
       def last_revision(page)
         wiki = File.read("#{@data_path}/text/.wiki")
-        Dir.glob("#{@root}/#{wiki.untaint}/#{escape(page).untaint}/*").map{|f| File.basename(f)}.sort_by{|f| -f.to_i}[0].to_i
+        Dir.glob("#{@root}/#{wiki}/#{escape(page)}/*").map{|f| File.basename(f)}.sort_by{|f| -f.to_i}[0].to_i
       end
     end
   end

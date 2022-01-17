@@ -25,7 +25,7 @@ module Hiki
       set_conf(conf)
       method, *args = methodwords(str)
       begin
-        method.untaint
+        method
         if plugin.respond_to?(method) && !Object.method_defined?(method)
           if args
             plugin.send(method, *args)

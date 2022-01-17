@@ -216,7 +216,7 @@ module Hiki
 
     def load_file(filename)
       open(filename) do |src|
-        instance_eval(src.read.untaint, filename, 1)
+        instance_eval(src.read, filename, 1)
       end
     end
 
@@ -251,7 +251,6 @@ module Hiki
     end
 
     def load_plugin(file)
-      file.untaint
       @defined_method_list = []
       @export_method_list = nil
       @resource_loaded = false
@@ -336,43 +335,53 @@ module Hiki
       end
     end
 
-    def add_header_proc(block = Proc.new)
+    def add_header_proc(proc=nil, &b)
+      block = proc || b
       @header_procs << block
     end
 
-    def add_footer_proc(block = Proc.new)
+    def add_footer_proc(proc=nil, &b)
+      block = proc || b
       @footer_procs << block
     end
 
-    def add_update_proc(block = Proc.new)
+    def add_update_proc(proc=nil, &b)
+      block = proc || b
       @update_procs << block
     end
 
-    def add_delete_proc(block = Proc.new)
+    def add_delete_proc(proc=nil, &b)
+      block = proc || b
       @delete_procs << block
     end
 
-    def add_body_enter_proc(block = Proc.new)
+    def add_body_enter_proc(proc=nil, &b)
+      block = proc || b
       @body_enter_procs << block
     end
 
-    def add_page_attribute_proc(block = Proc.new)
+    def add_page_attribute_proc(proc=nil, &b)
+      block = proc || b
       @page_attribute_procs << block
     end
 
-    def add_body_leave_proc(block = Proc.new)
+    def add_body_leave_proc(proc=nil, &b)
+      block = proc || b
       @body_leave_procs << block
     end
 
-    def add_edit_proc(block = Proc.new)
+    def add_edit_proc(proc=nil, &b)
+      block = proc || b
       @edit_procs << block
     end
 
-    def add_form_proc(block = Proc.new)
+    def add_form_proc(proc=nil, &b)
+      block = proc || b
       @form_procs << block
     end
 
-    def add_menu_proc(block = Proc.new)
+    def add_menu_proc(proc=nil, &b)
+      block = proc || b
       @menu_procs << block
     end
 
@@ -384,7 +393,8 @@ module Hiki
       nil
     end
 
-    def add_conf_proc(key, label, block = Proc.new)
+    def add_conf_proc(key, label, proc=nil, &b)
+      block = proc || b
       return unless @mode =~ /^(conf|saveconf)$/
       @conf_keys << key unless @conf_keys.index(key)
       @conf_procs[key] = [label, block]

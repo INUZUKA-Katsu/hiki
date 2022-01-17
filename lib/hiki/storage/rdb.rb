@@ -148,15 +148,15 @@ module Hiki
         get_attribute(page, :count)
       end
 
-      def freeze_page (page, freeze)
+      def freeze_page(page, freeze)
         set_attribute(page, [[:freeze, freeze]])
       end
 
-      def is_frozen? (page)
+      def is_frozen?(page)
         get_attribute(page, :freeze)
       end
 
-      def set_last_update (page, t)
+      def set_last_update(page, t)
         set_attribute(page, [[:last_modified, t]])
       end
 
@@ -220,11 +220,11 @@ module Hiki
       end
 
       def textdir(s)
-        File::join(@pages_path, escape(s)).untaint
+        File::join(@pages_path, escape(s))
       end
 
       def backupdir(s)
-        File::join(@backup_path, escape(s)).untaint
+        File::join(@backup_path, escape(s))
       end
     end
   end

@@ -21,7 +21,6 @@ module Hiki
         # remove old session files
         Dir.mkdir(session_path) unless test(?e,  session_path)
         Dir.glob("#{session_path}/*").each do |file|
-          file.untaint
           File.delete(file) if Time.now - File.mtime(file) > @max_age
         end
       end
@@ -68,7 +67,7 @@ module Hiki
     end
 
     def session_file
-      "#{session_path}/#{@session_id}".untaint
+      "#{session_path}/#{@session_id}"
     end
 
     # (from cgi/session.rb)

@@ -160,7 +160,7 @@ end
 
 # Finally, we can eval the selected plugins as tdiary.rb does
 if sp_option("selected")
-  sp_option("selected").untaint.split(/\n/).collect{ |p| File.basename(p) }.sort.each do |filename|
+  sp_option("selected").split(/\n/).collect{ |p| File.basename(p) }.sort.each do |filename|
     @sp_path.each do |dir|
       path = "#{dir}/#{filename}"
       if File.readable?(path)

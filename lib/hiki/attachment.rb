@@ -55,8 +55,8 @@ module Hiki
       filename = File.basename(attach_file[:filename].gsub(/\\/, "/"))
       cache_path = "#{@conf.cache_path}/attach"
       attach_path = "#{cache_path}/#{escape(page)}"
-      Dir.mkdir(cache_path) unless test(?e, cache_path.untaint)
-      Dir.mkdir(attach_path) unless test(?e, attach_path.untaint)
+      Dir.mkdir(cache_path) unless test(?e, cache_path)
+      Dir.mkdir(attach_path) unless test(?e, attach_path)
       path = "#{attach_path}/#{escape(filename)}"
       max_size = @conf.options["attach_size"] || 1048576 # 1 MB
       if attach_file[:tempfile].size > max_size
@@ -67,7 +67,7 @@ module Hiki
         if (!@conf.options["attach.allow_script"]) && (/<script\b/i =~ content)
           raise "You cannot attach a file that contains scripts."
         else
-          File.open(path.untaint, "wb") do |file|
+          File.open(path, "wb") do |file|
             file.print content
           end
           result = ""
@@ -86,7 +86,7 @@ module Hiki
       Dir.foreach(attach_path) do |file|
         next unless params["file_#{file}"]
         path = "#{attach_path}/#{file}"
-        if FileTest.file?(path.untaint) && params["file_#{file}"]
+        if FileTest.file?(path) && params["file_#{file}"]
           File.unlink(path)
           result << "FILE        = #{File.basename(path)}\n"
         end

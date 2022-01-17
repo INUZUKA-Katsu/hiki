@@ -33,7 +33,7 @@ module Hiki
         if exist?(page)
           return nil if md5 != md5hex(page)
           if update_timestamp
-            FileUtils.copy(filename, backupdir(page), { preserve: true })
+            FileUtils.copy(filename, backupdir(page), **{ preserve: true })
           end
         end
         create_info_default(page) unless info_exist?(page)
@@ -50,7 +50,7 @@ module Hiki
       def unlink(page)
         if exist?(page)
           begin
-            FileUtils.copy(textdir(page), backupdir(page), { preserve: true })
+            FileUtils.copy(textdir(page), backupdir(page), **{ preserve: true })
             delete_info(page)
             File.unlink(textdir(page))
           rescue
@@ -77,7 +77,7 @@ module Hiki
       end
 
       def pages
-        Dir.glob("#{@pages_path}/*").delete_if {|f| !test(?f, f.untaint)}.collect! {|f|
+        Dir.glob("#{@pages_path}/*").delete_if {|f| !test(?f, f)}.collect! {|f|
           unescape(File.basename(f))
         }
       end
@@ -216,7 +216,7 @@ module Hiki
         @info.transaction do
           pages.each do |a|
             r = default
-            r[:last_modified] = File.mtime("#{@pages_path}/#{escape(a)}".untaint)
+            r[:last_modified] = File.mtime("#{@pages_path}/#{escape(a)}")
             @info[escape(a)]  = r
           end
         end
@@ -240,11 +240,11 @@ module Hiki
       end
 
       def textdir(s)
-        File.join(@pages_path, escape(s)).untaint
+        File.join(@pages_path, escape(s))
       end
 
       def backupdir(s)
-        File.join(@backup_path, escape(s)).untaint
+        File.join(@backup_path, escape(s))
       end
     end
   end
